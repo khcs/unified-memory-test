@@ -5,28 +5,19 @@ import numpy as np
 
 import cupy as cp
 
-from pdb import set_trace as bp
-
 cwd = os.getcwd()
-path_data = os.path.join(cwd, 'data.tif')
-inputfile_psf = os.path.join(cwd, 'psf.tif')
 
-resize_scale = 1.0 
-dataA = io.imread(path_data)
-dataA = np.swapaxes(dataA, 0, 2)
-dataA = transform.resize(dataA, np.floor(np.asarray(dataA.shape[:2])*resize_scale).tolist() + [dataA.shape[2]])
+scale = 1024 
+dataA = np.random.randn(scale, scale, 100)
 
 N = dataA.shape
 
 Estimate = np.copy(dataA)
 Measure = np.copy(dataA)
 
-FullPSF = io.imread(inputfile_psf).astype(float)
-FullPSF = np.swapaxes(FullPSF, 2, 0)
-FullPSF = FullPSF/FullPSF.sum()
-FullPSF = transform.resize(FullPSF, np.floor(np.asarray(FullPSF.shape)*resize_scale))
+FullPSF = np.random.randn(scale, scale, 100)
 
-OTF = np.fft.fftn(np.roll(FullPSF, (-np.floor(np.asarray(N[:2])/2).astype(int)).tolist()) + [N[2]])
+OTF = np.fft.fftn(np.roll(FullPSF, (-np.floor(np.asarray(N)/2).astype(int)).tolist()))
 
 cp.cuda.set_allocator(cp.cuda.MemoryPool(cp.cuda.malloc_managed).malloc)
 
