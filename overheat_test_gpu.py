@@ -24,9 +24,9 @@ Measure = np.copy(dataA)
 FullPSF = io.imread(inputfile_psf).astype(float)
 FullPSF = np.swapaxes(FullPSF, 2, 0)
 FullPSF = FullPSF/FullPSF.sum()
-FullPSF = transform.resize(FullPSF, np.floor(np.asarray(FullPSF.shape)*resize_scale))
+FullPSF = transform.resize(FullPSF, np.floor(np.asarray(FullPSF.shape[:2])*resize_scale).tolist() + [FullPSF.shape[2]])
 
-OTF = np.fft.fftn(np.roll(FullPSF, (-np.floor(np.asarray(N[:2])/2).astype(int)).tolist()) + [N[2]])
+OTF = np.fft.fftn(np.roll(FullPSF, (-np.floor(np.asarray(N)/2).astype(int)).tolist()))
 
 cp.cuda.set_allocator(cp.cuda.MemoryPool(cp.cuda.malloc_managed).malloc)
 
