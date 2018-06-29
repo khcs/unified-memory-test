@@ -5,13 +5,11 @@ import numpy as np
 
 import cupy as cp
 
-from pdb import set_trace as bp
-
 cwd = os.getcwd()
 path_data = os.path.join(cwd, 'data.tif')
 inputfile_psf = os.path.join(cwd, 'psf.tif')
 
-resize_scale = 1.0 
+resize_scale = 1.0
 dataA = io.imread(path_data)
 dataA = np.swapaxes(dataA, 0, 2)
 dataA = transform.resize(dataA, np.floor(np.asarray(dataA.shape[:2])*resize_scale).tolist() + [dataA.shape[2]])
